@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Flipbook de Amor 3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: radial-gradient(circle at center, #ffd6e8 0%, #fff0f6 100%);
+      font-family: 'Georgia', serif;
+      perspective: 2000px;
+      overflow: hidden;
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rain-photos {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .rain-photos img {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(255,77,136,0.22);
+      animation: rainPhoto 7s linear infinite;
+      opacity: 0.85;
+    }
+    @keyframes rainPhoto {
+      0% { transform: translateY(-120px) rotate(-10deg);}
+      90% { opacity: 0.85;}
+      100% { transform: translateY(100vh) rotate(12deg); opacity: 0;}
+    }
+    .book {
+      width: 700px;
+      max-width: 98vw;
+      height: 440px;
+      max-height: 80vh;
+      position: relative;
+      border-radius: 14px;
+      background: transparent;
+      perspective: 2000px;
+      overflow: visible;
+      display: flex;
+      z-index: 2;
+      margin: auto;
+      left: 0; right: 0; top: 0; bottom: 0;
+    }
+    .flip-container {
+      width: 340px;
+      max-width: 48vw;
+      height: 440px;
+      max-height: 80vh;
+      position: absolute;
+      top: 0;
+      left: 180px;
+      perspective: 2000px;
+      z-index: 30;
+      transition: left 1s cubic-bezier(.77,.2,.32,1.01);
+    }
+    .flipper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s cubic-bezier(.77,.2,.32,1.01);
+      cursor: pointer;
+    }
+    .flipper.flip {
+      transform: rotateY(-180deg);
+    }
+    .front, .back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+      border-radius: 22px;
+      box-shadow: 0 18px 48px rgba(255,77,136,0.22), 0 0 0 12px #fff0f6, 0 2px 8px #ff99bb;
+      box-sizing: border-box;
+      padding: 38px 28px 38px 28px;
+      font-size: 22px;
+      color: #444;
+      border: 3px solid #ffd6e8;
+      background: #fffdf5;
+    }
+    .front {
+      background: linear-gradient(120deg, #ff4d88 60%, #ff99bb 100%);
+      color: white;
+      font-size: 34px;
+      font-weight: bold;
+      text-shadow: 2px 3px 16px rgba(0,0,0,0.18);
+      border: 6px solid #fff0f6;
+      box-shadow: 0 0 0 18px #fff0f6, 0 18px 48px rgba(255,77,136,0.22), 0 2px 8px #ff99bb;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border-top-left-radius: 60px 40px;
+      border-bottom-right-radius: 60px 40px;
+      border-bottom-left-radius: 22px;
+      border-top-right-radius: 22px;
+      box-shadow:
+        0 0 0 18px #fff0f6,
+        0 18px 48px rgba(255,77,136,0.22),
+        0 2px 8px #ff99bb,
+        inset 0 0 40px 0 #ff99bb66,
+        0 0 60px 0 #ff4d88aa;
+    }
+    .front .shine {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.09) 60%, transparent 100%);
+      border-radius: 22px;
+      z-index: 2;
+      mix-blend-mode: screen;
+    }
+    .front .hearts {
+      position: absolute;
+      top: 30px; left: 30px;
+      font-size: 38px;
+      filter: drop-shadow(0 2px 8px #ff99bb);
+      z-index: 3;
+      animation: float 2.5s infinite alternate;
+    }
+    .front .hearts2 {
+      position: absolute;
+      bottom: 38px; right: 38px;
+      font-size: 28px;
+      filter: drop-shadow(0 2px 8px #ff99bb);
+      z-index: 3;
+      animation: float 2.2s infinite alternate-reverse;
+    }
+    @keyframes float {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(-18px);}
+    }
+    .front .panda {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 120px;
+      z-index: 4;
+      filter: drop-shadow(0 4px 12px #ff99bb);
+    }
+    .front .titulo {
+      font-family: 'Georgia', serif;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      font-size: 40px;
+      z-index: 5;
+      text-shadow: 2px 2px 12px #ff99bb;
+      margin-top: 30px;
+    }
+    .front .subtitulo {
+      font-size: 22px;
+      margin-top: 8px;
+      color: #ffe6f0;
+      font-weight: normal;
+      z-index: 5;
+      text-shadow: 1px 1px 8px #ff99bb;
+      margin-bottom: 80px;
+    }
+    .front .ribbon {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 32px;
+      background: linear-gradient(90deg, #fff0f6 60%, #ff99bb 100%);
+      border-radius: 0 0 18px 18px;
+      box-shadow: 0 2px 8px #ff99bb88;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #ff4d88;
+      font-family: 'Georgia', serif;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .front .corner {
+      position: absolute;
+      top: 0; right: 0;
+      width: 48px; height: 48px;
+      background: radial-gradient(circle at 60% 40%, #fff0f6 60%, #ff99bb 100%);
+      border-bottom-left-radius: 48px;
+      z-index: 10;
+      box-shadow: 0 2px 8px #ff99bb88;
+    }
+    .back {
+      background: linear-gradient(135deg, #fffdf5 80%, #ffd6e8 100%);
+      color: #ff4d88;
+      font-size: 24px;
+      font-weight: bold;
+      border: 2px solid #ff99bb;
+      text-align: center;
+      transform: rotateY(180deg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .sheet {
+      width: 340px;
+      max-width: 48vw;
+      height: 440px;
+      max-height: 80vh;
+      position: absolute;
+      top: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s, left 0.8s cubic-bezier(.77,.2,.32,1.01);
+      box-sizing: border-box;
+      padding: 32px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+      font-size: 22px;
+      color: #444;
+      border: 1px solid #ffd6e8;
+      background: #fffdf5;
+      z-index: 10;
+    }
+    .sheet.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .sheet.left {
+      left: 0;
+    }
+    .sheet.right {
+      left: 360px;
+    }
+    .sheet.end {
+      background: linear-gradient(135deg, #fffdf5 80%, #ffd6e8 100%);
+      color: #444;
+      font-size: 24px;
+      font-weight: bold;
+      border: 2px solid #ff99bb;
+      cursor: pointer;
+    }
+    .arrow-btn {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      background: #ff4d88;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(255,77,136,0.18);
+      transition: background 0.2s;
+      z-index: 2;
+    }
+    .arrow-btn:active {
+      background: #ff99bb;
+    }
+    #nombreEmergente {
+      position: fixed;
+      background: transparent;
+      color: #ff4d88;
+      font-size: 32px;
+      font-family: 'Georgia', serif;
+      font-weight: bold;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      z-index: 1000;
+      display: none;
+      pointer-events: none;
+      left: 0; top: 0;
+      transform: translate(-50%, -50%);
+      animation: none;
+      white-space: nowrap;
+    }
+    /* Efecto explosión */
+    .explosion {
+      animation: explosion 0.7s cubic-bezier(.42,1.5,.58,1) forwards;
+    }
+    @keyframes explosion {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2) rotate(-20deg);
+        letter-spacing: 0px;
+        filter: blur(8px);
+      }
+      60% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2) rotate(8deg);
+        letter-spacing: 8px;
+        filter: blur(0px);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        letter-spacing: 2px;
+        filter: blur(0px);
+      }
+    }
+    .explosion-nombre {
+      position: fixed;
+      color: #ff4d88;
+      font-size: 32px;
+      font-family: 'Georgia', serif;
+      font-weight: bold;
+      pointer-events: none;
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      z-index: 1000;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.2);
+      animation: explosionFade 1.1s cubic-bezier(.42,1.5,.58,1) forwards;
+    }
+    @keyframes explosionFade {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2) rotate(-20deg);
+        letter-spacing: 0px;
+        filter: blur(8px);
+      }
+      40% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.3) rotate(8deg);
+        letter-spacing: 12px;
+        filter: blur(0px);
+      }
+      70% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        letter-spacing: 2px;
+        filter: blur(0px);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.1) rotate(-8deg);
+        letter-spacing: 8px;
+        filter: blur(6px);
+      }
+    }
+    @media (max-width: 900px) {
+      .book { width: 98vw; height: 60vw; min-height: 320px; }
+      .flip-container, .sheet { width: 46vw; max-width: 98vw; height: 60vw; max-height: 80vh; min-width: 180px; min-height: 320px;}
+      .sheet.right { left: 48vw; }
+      .flip-container { left: 24vw; }
+    }
+    @media (max-width: 600px) {
+      .book { width: 98vw; height: 320px; }
+      .flip-container, .sheet { width: 46vw; height: 320px; min-width: 140px;}
+      .sheet.right { left: 48vw; }
+      .flip-container { left: 24vw; }
+      .front .titulo { font-size: 28px;}
+      .front .subtitulo { font-size: 16px;}
+      .front .ribbon { font-size: 14px; width: 80px; height: 24px;}
+      .front .panda { width: 70px; height: 70px;}
+      #nombreEmergente { font-size: 22px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="rain-photos" id="rainPhotos"></div>
+  <div class="book" id="book">
+    <!-- Portada con reverso y detalles 3D -->
+    <div class="flip-container" id="flipPortada">
+      <div class="flipper" id="flipper" onclick="abrirPortada()">
+        <div class="front">
+          <span class="ribbon">Te amo</span>
+          <span class="corner"></span>
+          <span class="hearts">💖💗</span>
+          <span class="hearts2">💞💕</span>
+          <div class="shine"></div>
+          <div class="titulo">Nuestro Amor</div>
+          <div class="subtitulo">Un viaje de sentimientos</div>
+          <svg class="panda" viewBox="0 0 120 120">
+            <ellipse cx="60" cy="80" rx="40" ry="30" fill="#fff"/>
+            <ellipse cx="40" cy="60" rx="12" ry="14" fill="#fff"/>
+            <ellipse cx="80" cy="60" rx="12" ry="14" fill="#fff"/>
+            <ellipse cx="35" cy="45" rx="8" ry="10" fill="#222"/>
+            <ellipse cx="85" cy="45" rx="8" ry="10" fill="#222"/>
+            <circle cx="60" cy="80" r="18" fill="#fff"/>
+            <ellipse cx="52" cy="80" rx="4" ry="6" fill="#222"/>
+            <ellipse cx="68" cy="80" rx="4" ry="6" fill="#222"/>
+            <ellipse cx="60" cy="90" rx="7" ry="4" fill="#222"/>
+            <ellipse cx="60" cy="95" rx="3" ry="2" fill="#ff99bb"/>
+          </svg>
+        </div>
+        <div class="back">
+          <div style="margin-top:180px;">Para ti, con todo mi amor 💌</div>
+        </div>
+      </div>
+    </div>
+    <!-- Páginas del libro -->
+    <div class="sheet right" id="sheet1">
+      <strong>Capítulo 1:</strong> El Encuentro<br><br>
+      Desde el primer momento que te vi, supe que algo especial estaba por comenzar. <br>
+      <span style="font-size:32px;">😍</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
+    </div>
+    <div class="sheet left" id="sheet2">
+      <strong>Capítulo 2:</strong> Los Momentos<br><br>
+      Cada sonrisa, cada abrazo y cada palabra han llenado mi vida de alegría.<br>
+      <span style="font-size:32px;">🤗</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
+    </div>
+    <div class="sheet right" id="sheet3">
+      <strong>Capítulo 3:</strong> El Futuro<br><br>
+      Quiero seguir escribiendo esta historia contigo, cada día, cada año, por siempre.<br>
+      <span style="font-size:32px;">💍</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
+    </div>
+    <div class="sheet left" id="sheet4">
+      <strong>Capítulo 4:</strong> Nuestros Sueños<br><br>
+      Juntos hemos soñado y alcanzado metas que jamás imaginé.<br>
+      <span style="font-size:32px;">🌟</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
+    </div>
+    <div class="sheet right" id="sheet6">
+      <strong>Capítulo 5:</strong> Aventuras<br><br>
+      Cada viaje y cada aventura contigo es un tesoro inolvidable.<br>
+      <span style="font-size:32px;">✈️</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
+    </div>
+    <div class="sheet left" id="sheet7">
+      <strong>Capítulo 6:</strong> Nuestro Hogar<br><br>
+      El mejor lugar del mundo es donde estamos juntos.<br>
+      <span style="font-size:32px;">🏡</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
+    </div>
+    <div class="sheet right" id="sheet8">
+      <strong>Capítulo 7:</strong> El Amor Verdadero<br><br>
+      Gracias por enseñarme lo que significa amar de verdad.<br>
+      <span style="font-size:32px;">💞</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
+    </div>
+    <div class="sheet left" id="sheet9">
+      <div style="font-size:22px; color:#d72660;">Siempre juntos, mi amor eterno. ❤️</div>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Final">&#8594;</button>
+    </div>
+    <div class="sheet end right" id="sheet5" onclick="goToCover()">
+      Gracias por ser mi gran amor 💖
+    </div>
+  </div>
+  <div id="nombreEmergente">Paulina</div>
+  <audio id="music" src="musica.mp3"></audio>
+  <script>
+    // Lluvia de fotos
+    const photoUrls = [
+      "Min bonita.jpg"
+    ];
+    function createRainPhoto() {
+      const rain = document.getElementById('rainPhotos');
+      const img = document.createElement('img');
+      img.src = photoUrls[Math.floor(Math.random() * photoUrls.length)];
+      img.style.left = Math.random() * (window.innerWidth - 120) + "px";
+      img.style.animationDuration = (5 + Math.random() * 4) + "s";
+      img.style.opacity = 0.7 + Math.random() * 0.3;
+      rain.appendChild(img);
+      setTimeout(() => { img.remove(); }, 7000);
+    }
+    setInterval(createRainPhoto, 900);
+
+    // Paginación
+    let currentPair = -1;
+    const pairs = [
+      ["sheet2", "sheet3"],
+      ["sheet4", "sheet6"],
+      ["sheet7", "sheet8"],
+      ["sheet9", "sheet5"]
+    ];
+    function abrirPortada() {
+      document.getElementById('flipper').classList.add('flip');
+      setTimeout(() => {
+        document.getElementById('flipPortada').style.left = "0px";
+        document.getElementById('sheet1').classList.add('visible');
+        currentPair = 0;
+        document.getElementById("music").play();
+      }, 1000);
+    }
+    function nextBookPage() {
+      if (currentPair < pairs.length) {
+        if (currentPair === 0) {
+          document.getElementById('flipPortada').classList.remove('visible');
+          document.getElementById('sheet1').classList.remove('visible');
+        } else {
+          document.getElementById(pairs[currentPair-1][0]).classList.remove('visible');
+          document.getElementById(pairs[currentPair-1][1]).classList.remove('visible');
+        }
+        document.getElementById(pairs[currentPair][0]).classList.add('visible');
+        document.getElementById(pairs[currentPair][1]).classList.add('visible');
+        currentPair++;
+      }
+    }
+    function goToCover() {
+      for (let i = 0; i < pairs.length; i++) {
+        document.getElementById(pairs[i][0]).classList.remove('visible');
+        document.getElementById(pairs[i][1]).classList.remove('visible');
+      }
+      document.getElementById('sheet1').classList.remove('visible');
+      document.getElementById('flipPortada').style.left = "180px";
+      document.getElementById('flipper').classList.remove('flip');
+      currentPair = -1;
+      document.getElementById("music").pause();
+      document.getElementById("music").currentTime = 0;
+    }
+    document.getElementById('flipPortada').style.left = "180px";
+
+    // Mostrar 3 nombres con efecto explosión y desvanecimiento en el punto del clic
+    document.body.addEventListener('click', function(e) {
+      const book = document.getElementById('book');
+      if (!book.contains(e.target)) {
+        const nombres = [
+          { texto: "Paulina", dx: -40, dy: -30 },
+          { texto: "Amor", dx: 0, dy: 30 },
+          { texto: "Linda", dx: 40, dy: -30 }
+        ];
+        nombres.forEach((obj, idx) => {
+          const nombre = document.createElement('div');
+          nombre.textContent = obj.texto;
+          nombre.className = 'explosion-nombre';
+          nombre.style.left = (e.clientX + obj.dx) + "px";
+          nombre.style.top = (e.clientY + obj.dy) + "px";
+          nombre.style.animationDelay = (idx * 0.07) + "s";
+          document.body.appendChild(nombre);
+          setTimeout(() => { nombre.remove(); }, 1100);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
