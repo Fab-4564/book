@@ -105,8 +105,8 @@
       font-size: 2.5vw;
       font-weight: bold;
       text-shadow: 2px 3px 16px rgba(0,0,0,0.18);
-      border: 6px solid #fff0f6;
-      box-shadow: 0 0 0 18px #fff0f6, 0 18px 48px rgba(255,77,136,0.22), 0 2px 8px #ff99bb;
+      border: 3px solid #fff0f6;
+      box-shadow: 0 0 0 10px #fff0f6, 0 18px 48px rgba(255,77,136,0.22), 0 2px 8px #ff99bb;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -118,7 +118,7 @@
       border-bottom-left-radius: 22px;
       border-top-right-radius: 22px;
       box-shadow:
-        0 0 0 18px #fff0f6,
+        0 0 0 10px #fff0f6,
         0 18px 48px rgba(255,77,136,0.22),
         0 2px 8px #ff99bb,
         inset 0 0 40px 0 #ff99bb66,
@@ -374,28 +374,96 @@
         filter: blur(6px);
       }
     }
-    @media (max-width: 900px) {
-      .book { width: 98vw; height: 60vw; min-height: 320px; }
-      .flip-container, .sheet { width: 46vw; max-width: 98vw; height: 60vw; max-height: 80vh; min-width: 180px; min-height: 320px;}
-      .sheet.right { left: 48vw; }
-      .flip-container { left: 24vw; }
-      .front, .back, .sheet { font-size: 3vw; }
-      .front .titulo { font-size: 4vw; }
-      .front .subtitulo { font-size: 2vw; }
-      .arrow-btn { width: 5vw; height: 5vw; font-size: 3vw; }
-      .explosion-nombre { font-size: 4vw; }
-    }
+    /* Mejoras para móviles */
     @media (max-width: 600px) {
-      .book { width: 98vw; height: 320px; }
-      .flip-container, .sheet { width: 46vw; height: 320px; min-width: 140px;}
-      .sheet.right { left: 48vw; }
-      .flip-container { left: 24vw; }
-      .front .titulo { font-size: 6vw;}
-      .front .subtitulo { font-size: 3vw;}
-      .front .ribbon { font-size: 3vw; width: 18vw; height: 4vw;}
-      .front .panda { width: 14vw; height: 14vw;}
-      .arrow-btn { width: 8vw; height: 8vw; font-size: 5vw; }
-      .explosion-nombre { font-size: 6vw; }
+      body {
+        padding: 0;
+        min-height: 100vh;
+        height: 100vh;
+        width: 100vw;
+        box-sizing: border-box;
+      }
+      .book {
+        width: 98vw;
+        height: 62vw;
+        min-height: 220px;
+        max-width: 100vw;
+        max-height: 80vh;
+        margin: auto;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: visible;
+        flex-direction: row;
+      }
+      .flip-container {
+        width: 47vw;
+        height: 62vw;
+        min-width: 120px;
+        max-width: 49vw;
+        max-height: 80vh;
+        left: 0 !important; /* Al girar, portada a la izquierda */
+        margin: 0;
+        border-radius: 10px;
+        font-size: 3vw;
+        padding: 3vw;
+        position: absolute;
+        top: 0;
+        z-index: 30;
+        transition: left 1s cubic-bezier(.77,.2,.32,1.01);
+      }
+      .sheet.right {
+        left: 49vw !important; /* Página 1 a la derecha */
+      }
+      .sheet.left {
+        left: 0 !important;
+      }
+      .sheet {
+        width: 47vw;
+        height: 62vw;
+        min-width: 120px;
+        max-width: 49vw;
+        max-height: 80vh;
+        margin: 0;
+        border-radius: 10px;
+        font-size: 3vw;
+        padding: 3vw;
+        position: absolute;
+        top: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s, left 0.8s cubic-bezier(.77,.2,.32,1.01);
+        box-sizing: border-box;
+        border: 2px solid #ffd6e8 !important;
+      }
+      .sheet.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    /* Ajusta el z-index para asegurar el orden correcto */
+    #flipPortada {
+      z-index: 10; /* La portada y su reverso quedan debajo de las páginas */
+    }
+    #sheet1 {
+      z-index: 20; /* Página 1 encima de la portada */
+    }
+    #sheet2 {
+      z-index: 30; /* Página 2 encima del reverso de la portada y página 1 */
+    }
+    #sheet3 {
+      z-index: 30; /* Página 3 encima del reverso de la página 2 */
+    }
+    #sheet4 {
+      z-index: 30; /* Página 4 encima del reverso de la página 3 */
+    }
+    #sheet5 {
+      z-index: 10; /* Página 5 (final) debajo de las demás páginas */
+    }
+    .sheet.right, .sheet.left {
+      border: 2px solid #ffd6e8 !important;
     }
   </style>
 </head>
@@ -442,7 +510,6 @@
       <strong>Capítulo 2:</strong> Los Momentos<br><br>
       Cada sonrisa, cada abrazo y cada palabra han llenado mi vida de alegría.<br>
       <span style="font-size:32px;">🤗</span>
-      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
     </div>
     <div class="sheet right" id="sheet3">
       <strong>Capítulo 3:</strong> El Futuro<br><br>
@@ -454,7 +521,6 @@
       <strong>Capítulo 4:</strong> Nuestros Sueños<br><br>
       Juntos hemos soñado y alcanzado metas que jamás imaginé.<br>
       <span style="font-size:32px;">🌟</span>
-      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
     </div>
     <div class="sheet right" id="sheet6">
       <strong>Capítulo 5:</strong> Aventuras<br><br>
@@ -466,7 +532,6 @@
       <strong>Capítulo 6:</strong> Nuestro Hogar<br><br>
       El mejor lugar del mundo es donde estamos juntos.<br>
       <span style="font-size:32px;">🏡</span>
-      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Siguiente página">&#8594;</button>
     </div>
     <div class="sheet right" id="sheet8">
       <strong>Capítulo 7:</strong> El Amor Verdadero<br><br>
@@ -476,13 +541,12 @@
     </div>
     <div class="sheet left" id="sheet9">
       <div style="font-size:22px; color:#d72660;">Siempre juntos, mi amor eterno. ❤️</div>
-      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();" title="Final">&#8594;</button>
     </div>
     <div class="sheet end right" id="sheet5" onclick="goToCover()">
       Gracias por ser mi gran amor 💖
     </div>
   </div>
-  <div id="nombreEmergente">Keyllie</div>
+  <div id="nombreEmergente">Paulina</div>
   <audio id="music" src="musica.mp3"></audio>
   <script>
     // Lluvia de fotos
@@ -553,9 +617,9 @@
         // Calcula desplazamientos relativos al tamaño de la ventana
         const base = Math.max(window.innerWidth, window.innerHeight) * 0.03;
         const nombres = [
-          { texto: "Keyllie", dx: -base, dy: -base },
-          { texto: "Te amo", dx: 0, dy: base },
-          { texto: "Preciosa", dx: base, dy: -base }
+          { texto: "Paulina", dx: -base, dy: -base },
+          { texto: "Amor", dx: 0, dy: base },
+          { texto: "Linda", dx: base, dy: -base }
         ];
         nombres.forEach((obj, idx) => {
           const nombre = document.createElement('div');
@@ -572,4 +636,3 @@
   </script>
 </body>
 </html>
-
