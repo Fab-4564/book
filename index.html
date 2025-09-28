@@ -221,7 +221,7 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.10);
       font-size: 2vw;
       color: #444;
-      border: 1px solid #ffd6e8;
+      border: 1px solid #ff4d88; /* ← borde igual que interiores */
       background: #fffdf5;
       display: flex;
       justify-content: center;
@@ -244,7 +244,7 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.10);
       font-size: 2vw;
       color: #444;
-      border: 1px solid #ffd6e8;
+      border: 1px solid #ff4d88;   /* ← marco delgado agregado */
       background: #fffdf5;
       z-index: 10;
     }
@@ -328,6 +328,9 @@
       }
       .sheet.right { left: 49vw !important; }
       .sheet.left { left: 0 !important; }
+
+      /* Escalado inverso: a menor ancho, mayor tamaño de letra */
+      /* Fórmula: combina vw con (600px - 100vw) para que al reducir ancho la parte adicional aumente */
       .sheet {
         width: 47vw;
         height: 62vw;
@@ -335,9 +338,18 @@
         max-width: 49vw;
         max-height: 80vh;
         border-radius: 10px;
-        font-size: 3vw;
+        font-size: calc(3.2vw + (600px - 100vw) * 0.04); /* <- aquí está el comportamiento pedido */
         padding: 3vw;
       }
+
+      /* Ajustes específicos de portada para que los títulos también crezcan al reducir ancho */
+      .front .titulo {
+        font-size: calc(4.5vw + (600px - 100vw) * 0.06);
+      }
+      .front .subtitulo {
+        font-size: calc(2.2vw + (600px - 100vw) * 0.04);
+      }
+
       .back {
         width: 47vw;
         height: 62vw;
@@ -346,7 +358,7 @@
         max-height: 80vh;
         left: 0;
         border-radius: 10px;
-        font-size: 3vw;
+        font-size: calc(3.2vw + (600px - 100vw) * 0.04);
       }
     }
     #flipPortada { z-index: 10; }
@@ -354,7 +366,13 @@
     #sheet2 { z-index: 30; }
     #sheet3 { z-index: 30; }
     #sheet4 { z-index: 30; }
-    #sheet5 { z-index: 10; }
+    #sheet5 { z-index: 30; }
+    #sheet6 { z-index: 30; }
+    #sheet7 { z-index: 30; }
+    #sheet8 { z-index: 30; }
+    #sheet9 { z-index: 30; }
+    #sheet10 { z-index: 30; }
+    #sheet11 { z-index: 10; }
   </style>
 </head>
 <body>
@@ -377,76 +395,140 @@
         </div>
       </div>
     </div>
-    <!-- Páginas -->
+
+    <!-- Páginas (existentes + nuevas) -->
     <div class="sheet right" id="sheet1">
       <strong>Capítulo 1:</strong> El Encuentro<br><br>
-      Desde el primer momento que te vi, supe que algo especial estaba por comenzar. <br>
+      Desde la primera vez que te vi, supe que era algo especial. <br>
       <span style="font-size:32px;">😍</span>
       <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();">&#8594;</button>
     </div>
+
     <div class="sheet left" id="sheet2">
       <strong>Capítulo 2:</strong> Los Momentos<br><br>
       Cada sonrisa, cada abrazo y cada palabra han llenado mi vida de alegría.<br>
       <span style="font-size:32px;">🤗</span>
     </div>
+
     <div class="sheet right" id="sheet3">
       <strong>Capítulo 3:</strong> El Futuro<br><br>
-      Quiero seguir escribiendo esta historia contigo, cada día, cada año, por siempre.<br>
+      Quiero escribir esta historia contigo, cada día, cada año, por siempre.<br>
       <span style="font-size:32px;">💍</span>
       <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();">&#8594;</button>
     </div>
+
     <div class="sheet left" id="sheet4">
       <strong>Capítulo 4:</strong> Nuestros Sueños<br><br>
-      Juntos hemos soñado y alcanzado metas que jamás imaginé.<br>
+      Juntos hemos alcanzado metas que jamás imaginé.<br>
       <span style="font-size:32px;">🌟</span>
     </div>
-    <div class="sheet end right" id="sheet5" onclick="goToCover()">
+
+    <div class="sheet right" id="sheet5">
+      <strong>Capítulo 5:</strong> Pequeñas cosas<br><br>
+      Esas pequeñas rutinas que compartimos son mi felicidad cotidiana.<br>
+      <span style="font-size:32px;">☕️</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();">&#8594;</button>
+    </div>
+
+    <div class="sheet left" id="sheet6">
+      <strong>Capítulo 6:</strong> Aventuras<br><br>
+      Recordando viajes, risas y promesas bajo las estrellas.<br>
+      <span style="font-size:32px;">✈️</span>
+    </div>
+
+    <div class="sheet right" id="sheet7">
+      <strong>Capítulo 7:</strong> Lecciones<br><br>
+      Aprendimos a ser mejores, juntos en lo bueno y en lo difícil.<br>
+      <span style="font-size:32px;">📚</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();">&#8594;</button>
+    </div>
+
+    <div class="sheet left" id="sheet8">
+      <strong>Capítulo 8:</strong> Risueños<br><br>
+      Las tonterías que nos hacen reír todavía me sacan mariposas.<br>
+      <span style="font-size:32px;">😂</span>
+    </div>
+
+    <div class="sheet right" id="sheet9">
+      <strong>Capítulo 9:</strong> Cimientos<br><br>
+      Construimos un hogar de confianza, respeto y cariño.<br>
+      <span style="font-size:32px;">🏠</span>
+      <button class="arrow-btn" onclick="nextBookPage(); event.stopPropagation();">&#8594;</button>
+    </div>
+
+    <div class="sheet left" id="sheet10">
+      <strong>Capítulo 10:</strong> Promesas<br><br>
+      Prometo cuidarte, escucharte y caminar a tu lado cada día.<br>
+      <span style="font-size:32px;">🤝</span>
+    </div>
+
+    <!-- Página final -->
+    <div class="sheet end right" id="sheet11" onclick="goToCover()">
       Gracias por ser mi gran amor 💖
     </div>
   </div>
-  <audio id="music" src="musica.mp3"></audio>
+
+  <audio id="music" src="lmuchachita.mp3"></audio>
+
   <script>
+    // Actualizamos los pares para incluir la nueva página sheet10 y la final sheet11
     let currentPair = -1;
     const pairs = [
-      ["sheet2", "sheet3"],
-      ["sheet4", "sheet5"]
+      ["sheet2","sheet3"],
+      ["sheet4","sheet5"],
+      ["sheet6","sheet7"],
+      ["sheet8","sheet9"],
+      ["sheet10","sheet11"]
     ];
+
     function abrirPortada() {
       document.getElementById('flipper').classList.add('flip');
       setTimeout(() => {
-        if (window.innerWidth <= 600) {
-          document.getElementById('flipPortada').style.left = "0px";
-        } else {
-          document.getElementById('flipPortada').style.left = "0px";
-        }
+        document.getElementById('flipPortada').style.left = "0px";
         document.getElementById('sheet1').classList.add('visible');
         currentPair = 0;
-        document.getElementById("music").play();
+        const music = document.getElementById("music");
+        const p = music.play();
+        if (p && p.catch) p.catch(() => { /* reproducción bloqueada hasta interacción extra */ });
       }, 1000);
     }
+
     function nextBookPage() {
       if (currentPair < pairs.length) {
         if (currentPair === 0) {
-          document.getElementById('flipPortada').classList.remove('visible');
           document.getElementById('sheet1').classList.remove('visible');
         } else {
-          document.getElementById(pairs[currentPair-1][0]).classList.remove('visible');
-          document.getElementById(pairs[currentPair-1][1]).classList.remove('visible');
+          const prev = pairs[currentPair-1];
+          if (prev && prev[0]) document.getElementById(prev[0]).classList.remove('visible');
+          if (prev && prev[1]) document.getElementById(prev[1]).classList.remove('visible');
         }
         if (currentPair < pairs.length) {
-          document.getElementById(pairs[currentPair][0]).classList.add('visible');
-          document.getElementById(pairs[currentPair][1]).classList.add('visible');
+          const cur = pairs[currentPair];
+          if (cur && cur[0]) document.getElementById(cur[0]).classList.add('visible');
+          if (cur && cur[1]) document.getElementById(cur[1]).classList.add('visible');
           currentPair++;
         }
       }
     }
+
     function goToCover() {
       document.querySelectorAll(".sheet").forEach(s => s.classList.remove("visible"));
       document.getElementById('flipper').classList.remove('flip');
-      document.getElementById('flipPortada').style.left = "180px";
+      // CENTRAR la portada en móvil y devolver a 180px en escritorio
+      const flipPortada = document.getElementById('flipPortada');
+      if (window.innerWidth <= 600) {
+        flipPortada.style.left = "25vw"; // centro aproximado para la vista móvil (coincide con .flip-container en CSS)
+      } else {
+        flipPortada.style.left = "180px";
+      }
       currentPair = -1;
+      const music = document.getElementById("music");
+      if (!music.paused) music.pause();
+      music.currentTime = 0;
     }
-    const images = ["foto1.jpg", "foto2.jpg", "foto3.jpg", "foto4.jpg"];
+
+    // Lluvia de fotos
+    const images = ["foto1.jpg", "foto2.jpg"];
     function createRainPhoto() {
       const rain = document.getElementById("rainPhotos");
       const img = document.createElement("img");
@@ -479,6 +561,22 @@
       const book = document.getElementById("book");
       if (!book.contains(e.target)) {
         explosionDePalabras(e.clientX, e.clientY);
+      }
+    });
+
+    // Si redimensionan la ventana mientras está en portada, aseguramos posición correcta
+    window.addEventListener('resize', () => {
+      // Si estamos en estado portada (flipper sin flip y sin sheets visibles) colocar en centro en móvil
+      const flipPortada = document.getElementById('flipPortada');
+      const anyVisibleSheet = Array.from(document.querySelectorAll('.sheet')).some(s => s.classList.contains('visible'));
+      const flipper = document.getElementById('flipper');
+      const isFlipped = flipper.classList.contains('flip');
+      if (!anyVisibleSheet && !isFlipped) {
+        if (window.innerWidth <= 600) {
+          flipPortada.style.left = '25vw';
+        } else {
+          flipPortada.style.left = '180px';
+        }
       }
     });
   </script>
